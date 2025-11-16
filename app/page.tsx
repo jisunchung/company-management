@@ -1,3 +1,4 @@
+import CompanyListSection from "@/components/features/company/CompanyListSection";
 import {
   PageLayout,
   Header,
@@ -22,9 +23,7 @@ export default function Home() {
       </Header>
       <Banner subtitle={BANNER.SUBTITLE} title={BANNER.TITLE} />
       <ContentSection>
-        <p className="text-text-muted">
-          관심기업으로 등록한 기업들을 관리합니다.
-        </p>
+        <CompanyListSection />
       </ContentSection>
     </PageLayout>
   );
