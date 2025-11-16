@@ -72,6 +72,11 @@ pwc-company-management-app/
 - 서버 상태: React Query
 - 클라이언트 상태: Zustand (ex. 선택된 기업, 페이지네이션 등)
 
+### AI 활용
+
+- 요구사항을 분석한 후 todo.md로 작업을 세분화하고, 구현 과정 전반에서 GitHub Copilot을 활용했습니다.
+- 여러 AI 모델을 통해 구현 방향이 적절한지 검토하며 흐름을 구체화하는 데 참고했습니다.
+
 ---
 
 ## 실행 방법
