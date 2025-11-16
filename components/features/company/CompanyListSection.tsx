@@ -1,5 +1,5 @@
 "use client";
-import { COMPANY_CONTENT, DEFAULT_EMAIL, MODAL } from "@/constants";
+import { COMPANY_CONTENT, DEFAULT_EMAIL } from "@/constants";
 import React, { useState } from "react";
 import CompanyList from "./CompanyList";
 import Button from "@/components/ui/Button";
@@ -9,10 +9,11 @@ import { useFavoriteCompanies } from "@/hooks/useFavoriteCompanies";
 import { usePaginationStore } from "@/store/pagination";
 import useSelectedCompanies from "@/hooks/useSelectedCompanies";
 import Pagination from "@/components/ui/Pagination";
-import Modal from "@/components/ui/Modal";
-import SearchableDropdown from "@/components/ui/SearchableDropdown";
 import { useCompanies } from "@/hooks/useCompanies";
 import { useCreateFavoriteCompany } from "@/hooks/useCreateFavoriteCompany";
+import { useDeleteFavoriteCompany } from "@/hooks/useDeleteFavoriteCompany";
+import CreateCompanyModal from "./CreateCompanyModal";
+import DeleteConfirmModal from "./DeleteConfirmModal";
 
 export default function CompanyListSection() {
   const { page, setPage } = usePaginationStore();
@@ -51,7 +52,19 @@ export default function CompanyListSection() {
   // API에서 가져온 기업 목록
   const companyOptions = companiesData?.companies ?? [];
 
-  const { selectedIds, toggleSelect, selectAll } = useSelectedCompanies(email);
+  const { selectedIds, toggleSelect, selectAll, clear } =
+    useSelectedCompanies(email);
+
+  const {
+    isDeleteModalOpen,
+    handleDeleteClick,
+    handleDeleteConfirm,
+    closeDeleteModal,
+  } = useDeleteFavoriteCompany(email, {
+    onSuccess: () => {
+      clear();
+    },
+  });
 
   const handleSelectAll = (checked: boolean) => {
     selectAll(
@@ -86,6 +99,7 @@ export default function CompanyListSection() {
           <Button
             variant="Outline"
             leftIcon={<Trash width={20} height={20} style={{ opacity: 1 }} />}
+            onClick={() => handleDeleteClick(undefined, selectedIds)}
           >
             {COMPANY_CONTENT.BUTTON.DELETE}
           </Button>
@@ -104,6 +118,7 @@ export default function CompanyListSection() {
           selectedIds={selectedIds}
           onToggle={toggleSelect}
           onSelectAll={handleSelectAll}
+          onDelete={handleDeleteClick}
         />
       )}
       {data && (
@@ -114,44 +129,23 @@ export default function CompanyListSection() {
         />
       )}
 
-      <Modal
+      <CreateCompanyModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={MODAL.ADD.TITLE}
-      >
-        <div className="flex flex-col gap-4">
-          <SearchableDropdown
-            label={MODAL.ADD.SUBTITLE}
-            placeholder={MODAL.ADD.SEARCH_PLACEHOLDER}
-            options={companyOptions}
-            value={selectedCompany}
-            onChange={setSelectedCompany}
-          />
-          <div className="flex flex-col gap-2">
-            <textarea
-              className="resize-none overflow-y-auto rounded border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none"
-              placeholder={MODAL.ADD.MEMO_PLACEHOLDER}
-              style={{
-                width: 600,
-                height: 282,
-                borderRadius: 6,
-                borderWidth: 1,
-              }}
-              value={memo}
-              onChange={(e) => setMemo(e.target.value)}
-            />
-          </div>
-          <div className="flex justify-end">
-            <Button
-              variant="Fill"
-              onClick={() => handleSave(selectedCompany, memo)}
-              disabled={isPending}
-            >
-              {isPending ? MODAL.ADD.CONFIRM_PENDING : MODAL.ADD.CONFIRM_BUTTON}
-            </Button>
-          </div>
-        </div>
-      </Modal>
+        companyOptions={companyOptions}
+        selectedCompany={selectedCompany}
+        onCompanyChange={setSelectedCompany}
+        memo={memo}
+        onMemoChange={setMemo}
+        onSave={() => handleSave(selectedCompany, memo)}
+        isPending={isPending}
+      />
+
+      <DeleteConfirmModal
+        isOpen={isDeleteModalOpen}
+        onClose={closeDeleteModal}
+        onConfirm={() => handleDeleteConfirm(selectedIds)}
+      />
     </section>
   );
 }

@@ -13,6 +13,7 @@ interface CompanyListProps {
   selectedIds: number[];
   onToggle: (id: number) => void;
   onSelectAll: (checked: boolean) => void;
+  onDelete?: (id: number) => void;
 }
 
 export default function CompanyList({
@@ -20,6 +21,7 @@ export default function CompanyList({
   selectedIds,
   onToggle,
   onSelectAll,
+  onDelete,
 }: CompanyListProps) {
   const allSelected =
     companies.length > 0 && selectedIds.length === companies.length;
@@ -55,6 +57,7 @@ export default function CompanyList({
               highlight={idx === 0}
               checked={selectedIds.includes(company.id)}
               onToggle={onToggle}
+              onDelete={onDelete}
             />
           ))}
         </tbody>

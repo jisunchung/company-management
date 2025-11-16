@@ -13,6 +13,7 @@ interface CompanyListItemProps {
   highlight?: boolean;
   checked?: boolean;
   onToggle?: (id: number) => void;
+  onDelete?: (id: number) => void;
 }
 
 export default function CompanyListItem({
@@ -20,6 +21,7 @@ export default function CompanyListItem({
   highlight,
   checked = false,
   onToggle,
+  onDelete,
 }: CompanyListItemProps) {
   return (
     <tr className={highlight ? "bg-[#fff7e0]" : ""}>
@@ -37,7 +39,12 @@ export default function CompanyListItem({
       </td>
       <td className="text-center align-middle">
         <div className="flex items-center justify-center">
-          <Trash className="h-5 w-5 text-gray-400 hover:text-red-500" />
+          <button
+            onClick={() => onDelete && onDelete(company.id)}
+            className="cursor-pointer"
+          >
+            <Trash className="h-5 w-5 text-gray-400 hover:text-red-500" />
+          </button>
         </div>
       </td>
     </tr>
