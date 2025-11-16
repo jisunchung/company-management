@@ -1,9 +1,11 @@
-import React from "react";
-import { Pencil, X } from "lucide-react";
+import React, { useRef, useEffect } from "react";
+import { Pencil } from "lucide-react";
 import Text from "@/components/ui/Text";
 import Button from "@/components/ui/Button";
 import { useFavoriteCompanyDetail } from "@/hooks/useFavoriteCompanyDetail";
+import { useUpdateFavoriteCompany } from "@/hooks/useUpdateFavoriteCompany";
 import { DEFAULT_EMAIL, DETAIL_PAGE } from "@/constants";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface CompanyDetailPanelProps {
   isOpen: boolean;
@@ -17,10 +19,30 @@ export default function CompanyDetailPanel({
   companyId,
 }: CompanyDetailPanelProps) {
   const email = DEFAULT_EMAIL;
+  const queryClient = useQueryClient();
   const { data, isLoading, isError } = useFavoriteCompanyDetail(
     companyId,
     email
   );
+  const updateFavoriteCompany = useUpdateFavoriteCompany(companyId!, email);
+
+  // 패널이 열릴 때마다 refetch
+  useEffect(() => {
+    if (isOpen && companyId) {
+      queryClient.invalidateQueries({
+        queryKey: ["favoriteCompany", companyId, { email }],
+      });
+    }
+  }, [isOpen, companyId, email, queryClient]);
+
+  // textarea ref
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleSave = () => {
+    if (textareaRef.current) {
+      updateFavoriteCompany.mutate({ memo: textareaRef.current.value });
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -36,19 +58,18 @@ export default function CompanyDetailPanel({
       {/* Side Panel */}
       <div className="fixed top-0 right-0 z-50 flex h-full w-1/2 flex-col bg-white shadow-xl">
         {/* Header */}
-        <div
-          className="flex items-center justify-center border-b p-6"
-          style={{ height: 60 }}
-        >
-          {isLoading ? (
-            <Text typography="t3" bold="bold">
-              {DETAIL_PAGE.LOADING}
-            </Text>
-          ) : (
-            <Text typography="t3" bold="bold">
-              {data?.company_name || ""}
-            </Text>
-          )}
+        <div className="flex h-[60px] items-center justify-between border-b p-6">
+          <div className="flex-1 text-center">
+            {isLoading ? (
+              <Text typography="t3" bold="bold">
+                {DETAIL_PAGE.LOADING}
+              </Text>
+            ) : (
+              <Text typography="t3" bold="bold">
+                {data?.company_name || ""}
+              </Text>
+            )}
+          </div>
         </div>
 
         {/* Content */}
@@ -63,17 +84,23 @@ export default function CompanyDetailPanel({
             </div>
           ) : (
             <textarea
+              key={data?.memo || ""}
+              ref={textareaRef}
               className="h-full w-full resize-none rounded border border-gray-300 p-4"
-              value={data?.memo || ""}
-              readOnly
+              defaultValue={data?.memo || ""}
             />
           )}
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end px-6 py-4">
-          <Button leftIcon={<Pencil width={20} height={20} />} variant="Fill">
-            수정하기
+        <div className="flex items-center justify-end space-x-2 px-6 py-4">
+          <Button
+            leftIcon={<Pencil width={20} height={20} />}
+            variant="Fill"
+            onClick={handleSave}
+            disabled={updateFavoriteCompany.isPending}
+          >
+            {DETAIL_PAGE.BUTTON.EDIT}
           </Button>
         </div>
       </div>
