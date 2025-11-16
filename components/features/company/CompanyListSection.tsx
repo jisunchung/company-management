@@ -25,17 +25,6 @@ export default function CompanyListSection() {
   const [selectedCompany, setSelectedCompany] = useState("");
   const [memo, setMemo] = useState("");
 
-  const { createCompany, isPending } = useCreateFavoriteCompany({
-    onSuccess: () => {
-      setIsModalOpen(false);
-      setSelectedCompany("");
-      setMemo("");
-    },
-  });
-
-  // API에서 가져온 기업 목록
-  const companyOptions = companiesData?.companies ?? [];
-
   // API 데이터 매핑 (CompanyList에 맞게 변환)
   const companies =
     data?.items.map((item) => ({
@@ -45,25 +34,29 @@ export default function CompanyListSection() {
       memo: item.memo,
     })) ?? [];
 
+  const { handleSave, isPending } = useCreateFavoriteCompany(
+    {
+      email,
+      existingCompanies: companies.map((c) => c.name),
+    },
+    {
+      onSuccess: () => {
+        setIsModalOpen(false);
+        setSelectedCompany("");
+        setMemo("");
+      },
+    }
+  );
+
+  // API에서 가져온 기업 목록
+  const companyOptions = companiesData?.companies ?? [];
+
   const { selectedIds, toggleSelect, selectAll } = useSelectedCompanies(email);
 
   const handleSelectAll = (checked: boolean) => {
     selectAll(
       checked,
       companies.map((c) => c.id)
-    );
-  };
-
-  const handleSave = () => {
-    const existingCompanyNames = companies.map((c) => c.name);
-
-    createCompany(
-      {
-        email,
-        company_name: selectedCompany,
-        memo: memo || null,
-      },
-      existingCompanyNames
     );
   };
 
@@ -149,7 +142,11 @@ export default function CompanyListSection() {
             />
           </div>
           <div className="flex justify-end">
-            <Button variant="Fill" onClick={handleSave} disabled={isPending}>
+            <Button
+              variant="Fill"
+              onClick={() => handleSave(selectedCompany, memo)}
+              disabled={isPending}
+            >
               {isPending ? MODAL.ADD.CONFIRM_PENDING : MODAL.ADD.CONFIRM_BUTTON}
             </Button>
           </div>
