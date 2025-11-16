@@ -36,19 +36,24 @@ export default function CompanyListSection() {
       memo: item.memo,
     })) ?? [];
 
-  const { handleSave, isPending } = useCreateFavoriteCompany(
-    {
-      email,
-      existingCompanies: companies.map((c) => c.name),
+  const { createCompany, isPending } = useCreateFavoriteCompany({
+    onSuccess: () => {
+      setIsModalOpen(false);
+      setSelectedCompany("");
+      setMemo("");
     },
-    {
-      onSuccess: () => {
-        setIsModalOpen(false);
-        setSelectedCompany("");
-        setMemo("");
+  });
+
+  const handleSave = (companyName: string, memo: string) => {
+    createCompany(
+      {
+        email,
+        company_name: companyName,
+        memo: memo || null,
       },
-    }
-  );
+      companies.map((c) => c.name)
+    );
+  };
 
   // API에서 가져온 기업 목록
   const companyOptions = companiesData?.companies ?? [];
