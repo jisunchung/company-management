@@ -44,6 +44,7 @@ export default function CompanyList({
                 aria-label="select all companies"
                 checked={allSelected}
                 onChange={(e) => onSelectAll(e.target.checked)}
+                className="accent-background-orange checked:bg-background-orange h-4 w-4"
               />
             </th>
             <th className="px-4 py-2">{COMPANY_CONTENT.LIST.COMPANY_NAME}</th>
@@ -52,11 +53,10 @@ export default function CompanyList({
           </tr>
         </thead>
         <tbody>
-          {companies.map((company, idx) => (
+          {companies.map((company) => (
             <CompanyListItem
               key={company.id}
               company={company}
-              highlight={idx === 0}
               checked={selectedIds.includes(company.id)}
               onToggle={onToggle}
               onDelete={onDelete}

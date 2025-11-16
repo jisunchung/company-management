@@ -19,7 +19,6 @@ interface CompanyListItemProps {
 
 export default function CompanyListItem({
   company,
-  highlight,
   checked = false,
   onToggle,
   onDelete,
@@ -27,7 +26,7 @@ export default function CompanyListItem({
 }: CompanyListItemProps) {
   return (
     <tr
-      className={`${highlight ? "bg-[#fff7e0]" : ""} cursor-pointer hover:bg-gray-50`}
+      className={`${checked ? "bg-background-yellow" : ""} cursor-pointer hover:bg-gray-50`}
     >
       <td
         className="text-center align-middle"
@@ -38,6 +37,7 @@ export default function CompanyListItem({
           checked={checked}
           onChange={() => onToggle && onToggle(company.id)}
           aria-label={`select ${company.name}`}
+          className="accent-background-orange checked:bg-background-orange h-4 w-4"
         />
       </td>
       <td
