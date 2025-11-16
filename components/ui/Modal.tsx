@@ -74,7 +74,9 @@ export default function Modal({
           </div>
         )}
 
-        <div>{children}</div>
+        <div className={`${variant === "default" ? "p-6" : ""}`}>
+          {children}
+        </div>
       </div>
     </div>
   );
