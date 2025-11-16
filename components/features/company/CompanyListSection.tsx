@@ -1,5 +1,5 @@
 "use client";
-import { COMPANY_CONTENT, PAGENATION, DEFAULT_EMAIL } from "@/constants";
+import { COMPANY_CONTENT, DEFAULT_EMAIL } from "@/constants";
 import React from "react";
 import CompanyList from "./CompanyList";
 import Button from "@/components/ui/Button";
@@ -8,6 +8,7 @@ import Text from "@/components/ui/Text";
 import { useFavoriteCompanies } from "@/hooks/useFavoriteCompanies";
 import { usePaginationStore } from "@/store/pagination";
 import useSelectedCompanies from "@/hooks/useSelectedCompanies";
+import Pagination from "@/components/ui/Pagination";
 
 export default function CompanyListSection() {
   // zustand로 페이지 상태 관리
@@ -79,23 +80,13 @@ export default function CompanyListSection() {
           onSelectAll={handleSelectAll}
         />
       )}
-      <div className="mt-4 flex items-center justify-center gap-2">
-        <button
-          className="text-text-muted"
-          disabled={page === 1}
-          onClick={() => setPage(page - 1)}
-        >
-          {PAGENATION.PREV}
-        </button>
-        <span className="font-semibold">{data?.page ?? page}</span>
-        <button
-          className="text-text-muted"
-          disabled={data ? data.page >= data.total_pages : false}
-          onClick={() => setPage(page + 1)}
-        >
-          {PAGENATION.NEXT}
-        </button>
-      </div>
+      {data && (
+        <Pagination
+          currentPage={page}
+          totalPages={data.total_pages}
+          onPageChange={setPage}
+        />
+      )}
     </section>
   );
 }

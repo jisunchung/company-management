@@ -7,7 +7,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
   width?: number | string;
   height?: number | string;
-  variant?: "Fill" | "Outline";
+  variant?: "Fill" | "Outline" | "Ghost";
   className?: string;
 }
 
@@ -27,6 +27,8 @@ export default function Button({
     variantClass = "bg-black text-white border border-black hover:bg-gray-700";
   } else if (variant === "Outline") {
     variantClass = "bg-white text-black border border-black hover:bg-gray-200";
+  } else if (variant === "Ghost") {
+    variantClass = "bg-white text-black border-none hover:bg-gray-100";
   }
 
   return (
