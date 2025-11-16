@@ -1,6 +1,6 @@
 "use client";
 import { COMPANY_CONTENT, DEFAULT_EMAIL } from "@/constants";
-import React from "react";
+import React, { useState } from "react";
 import CompanyList from "./CompanyList";
 import Button from "@/components/ui/Button";
 import { Plus, Trash } from "lucide-react";
@@ -9,13 +9,15 @@ import { useFavoriteCompanies } from "@/hooks/useFavoriteCompanies";
 import { usePaginationStore } from "@/store/pagination";
 import useSelectedCompanies from "@/hooks/useSelectedCompanies";
 import Pagination from "@/components/ui/Pagination";
+import Modal from "@/components/ui/Modal";
 
 export default function CompanyListSection() {
-  // zustand로 페이지 상태 관리
   const { page, setPage } = usePaginationStore();
-  // 여러 API에서 공통 사용: constants에서 임시 email import
+
   const email = DEFAULT_EMAIL;
   const { data, isLoading, isError } = useFavoriteCompanies(email, page);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // API 데이터 매핑 (CompanyList에 맞게 변환)
   const companies =
@@ -54,6 +56,7 @@ export default function CompanyListSection() {
           <Button
             variant="Fill"
             leftIcon={<Plus width={20} height={20} style={{ opacity: 1 }} />}
+            onClick={() => setIsModalOpen(true)}
           >
             {COMPANY_CONTENT.BUTTON.ADD}
           </Button>
@@ -87,6 +90,15 @@ export default function CompanyListSection() {
           onPageChange={setPage}
         />
       )}
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="관심 기업 생성"
+      >
+        {/* 모달 내용은 여기에 추가 */}
+        <p>관심 기업 생성 폼이 들어갈 자리입니다.</p>
+      </Modal>
     </section>
   );
 }
