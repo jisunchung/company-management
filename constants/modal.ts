@@ -6,8 +6,11 @@ export const MODAL = {
     SEARCH_PLACEHOLDER: "검색",
     MEMO_PLACEHOLDER: "메모를 입력하세요",
     CONFIRM_PENDING: "저장 중...",
+    ALERT: "관심기업을 선택해주세요",
+    ALERT_DUPLICATE: "이미 추가된 관심기업입니다",
   },
   DELETE: {
+    ALERT: "삭제할 기업을 선택해주세요",
     TITLE: "삭제하시겠습니다?",
     SUBTITLE: "관심기업 삭제시 복구할 수 없습니다.",
     SUBTITLE2: "정말 삭제하시겠습니까?",

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteFavoriteCompany } from "@/lib/api/favoriteCompany";
+import { MODAL } from "@/constants";
 
 interface UseDeleteFavoriteCompanyOptions {
   onSuccess?: () => void;
@@ -40,7 +41,7 @@ export function useDeleteFavoriteCompany(
     } else {
       // 다중 삭제
       if (!selectedIds || selectedIds.length === 0) {
-        alert("삭제할 기업을 선택해주세요.");
+        alert(MODAL.DELETE.ALERT);
         return;
       }
       setDeleteTargetId(null);

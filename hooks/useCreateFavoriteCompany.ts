@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFavoriteCompany } from "@/lib/api/favoriteCompany";
+import { MODAL } from "@/constants";
 
 interface UseCreateFavoriteCompanyOptions {
   onSuccess?: () => void;
@@ -26,7 +27,7 @@ export function useCreateFavoriteCompany(
 
   const handleSave = (companyName: string, memo: string) => {
     if (!companyName) {
-      alert("기업을 선택해주세요.");
+      alert(MODAL.ADD.ALERT);
       return;
     }
 
@@ -35,7 +36,7 @@ export function useCreateFavoriteCompany(
     );
 
     if (isDuplicate) {
-      alert("이미 관심기업으로 등록된 기업입니다.");
+      alert(MODAL.ADD.ALERT_DUPLICATE);
       return;
     }
 
