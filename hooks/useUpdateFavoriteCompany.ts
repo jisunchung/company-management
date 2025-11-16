@@ -10,7 +10,7 @@ export function useUpdateFavoriteCompany(id: number, email: string) {
       updateFavoriteCompany(id, email, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["favoriteCompany", id, { email }],
+        queryKey: ["favoriteCompanyDetail", id, email],
       });
       queryClient.invalidateQueries({
         queryKey: ["favoriteCompanies", { email }],

@@ -30,7 +30,7 @@ export default function CompanyDetailPanel({
   useEffect(() => {
     if (isOpen && companyId) {
       queryClient.invalidateQueries({
-        queryKey: ["favoriteCompany", companyId, { email }],
+        queryKey: ["favoriteCompanyDetail", companyId, email],
       });
     }
   }, [isOpen, companyId, email, queryClient]);
