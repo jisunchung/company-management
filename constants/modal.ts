@@ -3,6 +3,9 @@ export const MODAL = {
     TITLE: "관심기업 생성",
     SUBTITLE: "기업 검색",
     CONFIRM_BUTTON: "저장",
+    SEARCH_PLACEHOLDER: "검색",
+    MEMO_PLACEHOLDER: "메모를 입력하세요",
+    CONFIRM_PENDING: "저장 중...",
   },
   DELETE: {
     TITLE: "삭제하시겠습니다?",

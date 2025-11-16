@@ -136,7 +136,7 @@ export default function CompanyListSection() {
         <div className="flex flex-col gap-4">
           <SearchableDropdown
             label={MODAL.ADD.SUBTITLE}
-            placeholder="검색"
+            placeholder={MODAL.ADD.SEARCH_PLACEHOLDER}
             options={companyOptions}
             value={selectedCompany}
             onChange={setSelectedCompany}
@@ -144,7 +144,7 @@ export default function CompanyListSection() {
           <div className="flex flex-col gap-2">
             <textarea
               className="resize-none overflow-y-auto rounded border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none"
-              placeholder="메모를 입력하세요"
+              placeholder={MODAL.ADD.MEMO_PLACEHOLDER}
               style={{
                 width: 600,
                 height: 282,
@@ -156,12 +156,14 @@ export default function CompanyListSection() {
             />
           </div>
           <div className="flex justify-end">
-            <Button 
-              variant="Fill" 
+            <Button
+              variant="Fill"
               onClick={handleSave}
               disabled={createMutation.isPending}
             >
-              {createMutation.isPending ? "저장 중..." : MODAL.ADD.CONFIRM_BUTTON}
+              {createMutation.isPending
+                ? MODAL.ADD.CONFIRM_PENDING
+                : MODAL.ADD.CONFIRM_BUTTON}
             </Button>
           </div>
         </div>

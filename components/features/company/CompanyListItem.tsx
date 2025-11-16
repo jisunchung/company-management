@@ -1,5 +1,6 @@
 import { Trash } from "lucide-react";
 import React from "react";
+import { formatDate } from "@/lib/utils";
 
 interface Company {
   id: number;
@@ -31,7 +32,9 @@ export default function CompanyListItem({
         />
       </td>
       <td className="px-4 py-2 align-middle">{company.name}</td>
-      <td className="px-4 py-2 align-middle">{company.createdAt}</td>
+      <td className="px-4 py-2 align-middle">
+        {formatDate(company.createdAt)}
+      </td>
       <td className="text-center align-middle">
         <Trash className="h-5 w-5 text-gray-400 hover:text-red-500" />
       </td>
