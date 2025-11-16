@@ -7,6 +7,7 @@ import { Plus, Trash } from "lucide-react";
 import Text from "@/components/ui/Text";
 import { useFavoriteCompanies } from "@/hooks/useFavoriteCompanies";
 import { usePaginationStore } from "@/store/pagination";
+import useSelectedCompanies from "@/hooks/useSelectedCompanies";
 
 export default function CompanyListSection() {
   // zustand로 페이지 상태 관리
@@ -14,9 +15,6 @@ export default function CompanyListSection() {
   // 여러 API에서 공통 사용: constants에서 임시 email import
   const email = DEFAULT_EMAIL;
   const { data, isLoading, isError } = useFavoriteCompanies(email, page);
-
-  // DEBUG: Print API data to console
-  console.log("Favorite companies API data:", data);
 
   // API 데이터 매핑 (CompanyList에 맞게 변환)
   const companies =
@@ -26,6 +24,15 @@ export default function CompanyListSection() {
       createdAt: item.created_at,
       memo: item.memo,
     })) ?? [];
+
+  const { selectedIds, toggleSelect, selectAll } = useSelectedCompanies(email);
+
+  const handleSelectAll = (checked: boolean) => {
+    selectAll(
+      checked,
+      companies.map((c) => c.id)
+    );
+  };
 
   return (
     <section className="mx-auto flex w-full flex-col gap-6">
@@ -65,7 +72,12 @@ export default function CompanyListSection() {
           데이터를 불러오지 못했습니다.
         </div>
       ) : (
-        <CompanyList companies={companies} />
+        <CompanyList
+          companies={companies}
+          selectedIds={selectedIds}
+          onToggle={toggleSelect}
+          onSelectAll={handleSelectAll}
+        />
       )}
       <div className="mt-4 flex items-center justify-center gap-2">
         <button
