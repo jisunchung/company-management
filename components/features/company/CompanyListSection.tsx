@@ -1,16 +1,31 @@
-import { COMPANY_CONTENT, PAGENATION } from "@/constants";
+"use client";
+import { COMPANY_CONTENT, PAGENATION, DEFAULT_EMAIL } from "@/constants";
 import React from "react";
 import CompanyList from "./CompanyList";
 import Button from "@/components/ui/Button";
 import { Plus, Trash } from "lucide-react";
 import Text from "@/components/ui/Text";
+import { useFavoriteCompanies } from "@/hooks/useFavoriteCompanies";
+import { usePaginationStore } from "@/store/pagination";
 
 export default function CompanyListSection() {
-  const companies = [
-    { id: 1, name: "삼성전자", createdAt: "2025. 07. 18 오후 06:55" },
-    { id: 2, name: "네이버", createdAt: "2024. 03. 10 오전 11:15" },
-    { id: 3, name: "현대자동차", createdAt: "2024. 03. 05 오후 03:30" },
-  ];
+  // zustand로 페이지 상태 관리
+  const { page, setPage } = usePaginationStore();
+  // 여러 API에서 공통 사용: constants에서 임시 email import
+  const email = DEFAULT_EMAIL;
+  const { data, isLoading, isError } = useFavoriteCompanies(email, page);
+
+  // DEBUG: Print API data to console
+  console.log("Favorite companies API data:", data);
+
+  // API 데이터 매핑 (CompanyList에 맞게 변환)
+  const companies =
+    data?.items.map((item) => ({
+      id: item.id,
+      name: item.company_name,
+      createdAt: item.created_at,
+      memo: item.memo,
+    })) ?? [];
 
   return (
     <section className="mx-auto flex w-full flex-col gap-6">
@@ -43,13 +58,31 @@ export default function CompanyListSection() {
         </div>
       </div>
 
-      <CompanyList companies={companies} />
+      {isLoading ? (
+        <div className="py-10 text-center text-gray-400">로딩 중...</div>
+      ) : isError ? (
+        <div className="py-10 text-center text-red-500">
+          데이터를 불러오지 못했습니다.
+        </div>
+      ) : (
+        <CompanyList companies={companies} />
+      )}
       <div className="mt-4 flex items-center justify-center gap-2">
-        <button className="text-text-muted" disabled>
+        <button
+          className="text-text-muted"
+          disabled={page === 1}
+          onClick={() => setPage(page - 1)}
+        >
           {PAGENATION.PREV}
         </button>
-        <span className="font-semibold">1</span>
-        <button className="text-text-muted">{PAGENATION.NEXT}</button>
+        <span className="font-semibold">{data?.page ?? page}</span>
+        <button
+          className="text-text-muted"
+          disabled={data ? data.page >= data.total_pages : false}
+          onClick={() => setPage(page + 1)}
+        >
+          {PAGENATION.NEXT}
+        </button>
       </div>
     </section>
   );
