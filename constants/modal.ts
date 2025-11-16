@@ -1,6 +1,6 @@
 export const MODAL = {
   ADD: {
-    TITLE: "관심기업 추가",
+    TITLE: "관심기업 생성",
     SUBTITLE: "기업 검색",
     CONFIRM_BUTTON: "저장",
   },

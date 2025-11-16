@@ -21,7 +21,7 @@ export default function Banner({ title, subtitle, className }: BannerProps) {
     >
       <div className="relative z-10 mx-auto flex h-full items-center justify-center px-6 text-center">
         <div className="flex flex-col gap-2">
-          <Text typography="t5" bold="regular" className="text-text-muted">
+          <Text typography="t6" bold="regular" className="text-text-muted">
             {subtitle}
           </Text>
 

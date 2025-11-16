@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import type { ReactNode } from "react";
+import { X } from "lucide-react";
+import Text from "@/components/ui/Text";
 
 interface ModalProps {
   isOpen: boolean;
@@ -45,8 +47,17 @@ export default function Modal({
         onClick={(e) => e.stopPropagation()}
       >
         {title && (
-          <div className="border-b px-6 py-4">
-            <h2 className="text-xl font-semibold">{title}</h2>
+          <div className="flex items-center justify-between border-b px-6 py-4">
+            <Text typography="t5" bold="bold">
+              {title}
+            </Text>
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-gray-600"
+              aria-label="닫기"
+            >
+              <X width={24} height={24} />
+            </button>
           </div>
         )}
         <div className="p-6">{children}</div>

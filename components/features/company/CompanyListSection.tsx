@@ -1,5 +1,5 @@
 "use client";
-import { COMPANY_CONTENT, DEFAULT_EMAIL } from "@/constants";
+import { COMPANY_CONTENT, DEFAULT_EMAIL, MODAL } from "@/constants";
 import React, { useState } from "react";
 import CompanyList from "./CompanyList";
 import Button from "@/components/ui/Button";
@@ -10,14 +10,38 @@ import { usePaginationStore } from "@/store/pagination";
 import useSelectedCompanies from "@/hooks/useSelectedCompanies";
 import Pagination from "@/components/ui/Pagination";
 import Modal from "@/components/ui/Modal";
+import SearchableDropdown from "@/components/ui/SearchableDropdown";
+import { useCompanies } from "@/hooks/useCompanies";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createFavoriteCompany } from "@/lib/api/favoriteCompany";
 
 export default function CompanyListSection() {
   const { page, setPage } = usePaginationStore();
+  const queryClient = useQueryClient();
 
   const email = DEFAULT_EMAIL;
   const { data, isLoading, isError } = useFavoriteCompanies(email, page);
+  const { data: companiesData } = useCompanies();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCompany, setSelectedCompany] = useState("");
+  const [memo, setMemo] = useState("");
+
+  // 관심기업 생성 mutation
+  const createMutation = useMutation({
+    mutationFn: createFavoriteCompany,
+    onSuccess: () => {
+      // 성공 시 목록 다시 불러오기
+      queryClient.invalidateQueries({ queryKey: ["favoriteCompanies"] });
+      // 모달 닫기 및 폼 초기화
+      setIsModalOpen(false);
+      setSelectedCompany("");
+      setMemo("");
+    },
+  });
+
+  // API에서 가져온 기업 목록
+  const companyOptions = companiesData?.companies ?? [];
 
   // API 데이터 매핑 (CompanyList에 맞게 변환)
   const companies =
@@ -35,6 +59,19 @@ export default function CompanyListSection() {
       checked,
       companies.map((c) => c.id)
     );
+  };
+
+  const handleSave = () => {
+    if (!selectedCompany) {
+      alert("기업을 선택해주세요.");
+      return;
+    }
+
+    createMutation.mutate({
+      email,
+      company_name: selectedCompany,
+      memo: memo || null,
+    });
   };
 
   return (
@@ -94,10 +131,40 @@ export default function CompanyListSection() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="관심 기업 생성"
+        title={MODAL.ADD.TITLE}
       >
-        {/* 모달 내용은 여기에 추가 */}
-        <p>관심 기업 생성 폼이 들어갈 자리입니다.</p>
+        <div className="flex flex-col gap-4">
+          <SearchableDropdown
+            label={MODAL.ADD.SUBTITLE}
+            placeholder="검색"
+            options={companyOptions}
+            value={selectedCompany}
+            onChange={setSelectedCompany}
+          />
+          <div className="flex flex-col gap-2">
+            <textarea
+              className="resize-none overflow-y-auto rounded border border-gray-300 px-4 py-2 text-sm focus:border-blue-500 focus:outline-none"
+              placeholder="메모를 입력하세요"
+              style={{
+                width: 600,
+                height: 282,
+                borderRadius: 6,
+                borderWidth: 1,
+              }}
+              value={memo}
+              onChange={(e) => setMemo(e.target.value)}
+            />
+          </div>
+          <div className="flex justify-end">
+            <Button 
+              variant="Fill" 
+              onClick={handleSave}
+              disabled={createMutation.isPending}
+            >
+              {createMutation.isPending ? "저장 중..." : MODAL.ADD.CONFIRM_BUTTON}
+            </Button>
+          </div>
+        </div>
       </Modal>
     </section>
   );

@@ -14,10 +14,10 @@ export default function Home() {
       <Header>
         <div className="text-lg font-semibold">{HEADER.TITLE}</div>
         <nav className="flex gap-6">
-          <Text typography="t6" bold="regular">
+          <Text typography="t7" bold="regular">
             {HEADER.TASK_TYPES.GENERAL}
           </Text>
-          <Text typography="t6" bold="regular">
+          <Text typography="t7" bold="regular">
             {HEADER.TASK_TYPES.INDUSTRY}
           </Text>
         </nav>
