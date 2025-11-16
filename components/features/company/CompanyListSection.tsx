@@ -14,6 +14,7 @@ import { useCreateFavoriteCompany } from "@/hooks/useCreateFavoriteCompany";
 import { useDeleteFavoriteCompany } from "@/hooks/useDeleteFavoriteCompany";
 import CreateCompanyModal from "./CreateCompanyModal";
 import DeleteConfirmModal from "./DeleteConfirmModal";
+import CompanyDetailPanel from "./CompanyDetailPanel";
 
 export default function CompanyListSection() {
   const { page, setPage } = usePaginationStore();
@@ -25,7 +26,7 @@ export default function CompanyListSection() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState("");
   const [memo, setMemo] = useState("");
-
+  const [selectedDetailId, setSelectedDetailId] = useState<number | null>(null);
   // API 데이터 매핑 (CompanyList에 맞게 변환)
   const companies =
     data?.items.map((item) => ({
@@ -121,6 +122,7 @@ export default function CompanyListSection() {
           onToggle={toggleSelect}
           onSelectAll={handleSelectAll}
           onDelete={handleDeleteClick}
+          onRowClick={setSelectedDetailId}
         />
       )}
       {data && (
@@ -147,6 +149,12 @@ export default function CompanyListSection() {
         isOpen={isDeleteModalOpen}
         onClose={closeDeleteModal}
         onConfirm={() => handleDeleteConfirm(selectedIds)}
+      />
+
+      <CompanyDetailPanel
+        isOpen={selectedDetailId !== null}
+        onClose={() => setSelectedDetailId(null)}
+        companyId={selectedDetailId}
       />
     </section>
   );

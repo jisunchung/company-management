@@ -14,6 +14,7 @@ interface CompanyListItemProps {
   checked?: boolean;
   onToggle?: (id: number) => void;
   onDelete?: (id: number) => void;
+  onRowClick?: (id: number) => void;
 }
 
 export default function CompanyListItem({
@@ -22,10 +23,16 @@ export default function CompanyListItem({
   checked = false,
   onToggle,
   onDelete,
+  onRowClick,
 }: CompanyListItemProps) {
   return (
-    <tr className={highlight ? "bg-[#fff7e0]" : ""}>
-      <td className="text-center align-middle">
+    <tr
+      className={`${highlight ? "bg-[#fff7e0]" : ""} cursor-pointer hover:bg-gray-50`}
+    >
+      <td
+        className="text-center align-middle"
+        onClick={(e) => e.stopPropagation()}
+      >
         <input
           type="checkbox"
           checked={checked}
@@ -33,11 +40,22 @@ export default function CompanyListItem({
           aria-label={`select ${company.name}`}
         />
       </td>
-      <td className="px-4 py-2 align-middle">{company.name}</td>
-      <td className="px-4 py-2 align-middle">
+      <td
+        className="px-4 py-2 align-middle"
+        onClick={() => onRowClick && onRowClick(company.id)}
+      >
+        {company.name}
+      </td>
+      <td
+        className="px-4 py-2 align-middle"
+        onClick={() => onRowClick && onRowClick(company.id)}
+      >
         {formatDate(company.createdAt)}
       </td>
-      <td className="text-center align-middle">
+      <td
+        className="text-center align-middle"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="flex items-center justify-center">
           <button
             onClick={() => onDelete && onDelete(company.id)}

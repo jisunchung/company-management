@@ -14,6 +14,7 @@ interface CompanyListProps {
   onToggle: (id: number) => void;
   onSelectAll: (checked: boolean) => void;
   onDelete?: (id: number) => void;
+  onRowClick?: (id: number) => void;
 }
 
 export default function CompanyList({
@@ -22,6 +23,7 @@ export default function CompanyList({
   onToggle,
   onSelectAll,
   onDelete,
+  onRowClick,
 }: CompanyListProps) {
   const allSelected =
     companies.length > 0 && selectedIds.length === companies.length;
@@ -58,6 +60,7 @@ export default function CompanyList({
               checked={selectedIds.includes(company.id)}
               onToggle={onToggle}
               onDelete={onDelete}
+              onRowClick={onRowClick}
             />
           ))}
         </tbody>
