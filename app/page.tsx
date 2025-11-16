@@ -11,6 +11,8 @@ import Text from "@/components/ui/Text";
 import { useState } from "react";
 import Image from "next/image";
 
+import IndustryForm from "@/components/features/industry/IndustryForm";
+
 export default function Home() {
   const [tab, setTab] = useState<"GENERAL" | "INDUSTRY">("GENERAL");
   return (
@@ -48,11 +50,7 @@ export default function Home() {
         </ContentSection>
       ) : (
         <ContentSection>
-          <div className="flex h-80 w-full items-center justify-center border border-dashed border-gray-300">
-            <Text typography="t3" className="text-gray-400">
-              산업 전문성 과제 페이지는 현재 준비 중입니다.
-            </Text>
-          </div>
+          <IndustryForm />
         </ContentSection>
       )}
     </PageLayout>
