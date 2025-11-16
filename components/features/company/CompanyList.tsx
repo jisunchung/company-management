@@ -15,13 +15,19 @@ interface CompanyListProps {
 export default function CompanyList({ companies }: CompanyListProps) {
   return (
     <div className="overflow-hidden rounded border">
-      <table className="w-full text-left">
+      <table className="w-full table-fixed text-left">
+        <colgroup>
+          <col style={{ width: "74px" }} />
+          <col style={{ width: "80.7%" }} />
+          <col style={{ width: "19.3%" }} />
+          <col style={{ width: "74px" }} />
+        </colgroup>
         <thead className="bg-background-tertiary">
           <tr>
-            <th className="w-12"></th>
+            <th className="text-center"></th>
             <th className="px-4 py-2">{COMPANY_CONTENT.LIST.COMPANY_NAME}</th>
             <th className="px-4 py-2">{COMPANY_CONTENT.LIST.CREATED_DATE}</th>
-            <th className="w-12"></th>
+            <th className="text-center"></th>
           </tr>
         </thead>
         <tbody>
