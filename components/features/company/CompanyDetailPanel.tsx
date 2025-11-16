@@ -40,7 +40,15 @@ export default function CompanyDetailPanel({
 
   const handleSave = () => {
     if (textareaRef.current) {
-      updateFavoriteCompany.mutate({ memo: textareaRef.current.value });
+      updateFavoriteCompany.mutate(
+        { memo: textareaRef.current.value },
+        {
+          onSuccess: () => {
+            alert(DETAIL_PAGE.EDIT_SUCCESS);
+            onClose();
+          },
+        }
+      );
     }
   };
 
