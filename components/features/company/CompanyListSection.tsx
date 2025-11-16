@@ -107,10 +107,12 @@ export default function CompanyListSection() {
       </div>
 
       {isLoading ? (
-        <div className="py-10 text-center text-gray-400">로딩 중...</div>
+        <div className="py-10 text-center text-gray-400">
+          {COMPANY_CONTENT.DATA_LOADING}
+        </div>
       ) : isError ? (
         <div className="py-10 text-center text-red-500">
-          데이터를 불러오지 못했습니다.
+          {COMPANY_CONTENT.DATA_LOADING_ERROR}
         </div>
       ) : (
         <CompanyList
