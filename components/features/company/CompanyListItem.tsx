@@ -36,7 +36,9 @@ export default function CompanyListItem({
         {formatDate(company.createdAt)}
       </td>
       <td className="text-center align-middle">
-        <Trash className="h-5 w-5 text-gray-400 hover:text-red-500" />
+        <div className="flex items-center justify-center">
+          <Trash className="h-5 w-5 text-gray-400 hover:text-red-500" />
+        </div>
       </td>
     </tr>
   );
