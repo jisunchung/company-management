@@ -1,0 +1,4 @@
+export const PAGENATION = {
+  PREV: "이전",
+  NEXT: "다음",
+};
