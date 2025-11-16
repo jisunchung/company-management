@@ -1,6 +1,9 @@
 import { COMPANY_CONTENT, PAGENATION } from "@/constants";
 import React from "react";
 import CompanyList from "./CompanyList";
+import Button from "@/components/ui/Button";
+import { Plus, Trash } from "lucide-react";
+import Text from "@/components/ui/Text";
 
 export default function CompanyListSection() {
   const companies = [
@@ -10,19 +13,36 @@ export default function CompanyListSection() {
   ];
 
   return (
-    <section className="mx-auto w-full">
-      <div className="mb-4 flex items-center justify-between">
-        <div className="text-xl font-semibold">{COMPANY_CONTENT.TITLE}</div>
-        <div className="flex gap-2">
-          <button className="rounded bg-black px-4 py-2 text-white">
+    <section className="mx-auto flex w-full flex-col gap-6">
+      <div className="flex flex-row justify-between">
+        <div className="flex flex-1 flex-col gap-1">
+          <Text typography="t2" bold="bold" className="w-full">
+            {COMPANY_CONTENT.TITLE}
+          </Text>
+          <Text
+            typography="t6"
+            bold="regular"
+            className="text-text-muted mb-2 w-full"
+          >
+            {COMPANY_CONTENT.SUBTITLE}
+          </Text>
+        </div>
+        <div className="flex flex-row items-end gap-2">
+          <Button
+            variant="Fill"
+            leftIcon={<Plus width={20} height={20} style={{ opacity: 1 }} />}
+          >
             {COMPANY_CONTENT.BUTTON.ADD}
-          </button>
-          <button className="border-border-primary rounded border px-4 py-2">
+          </Button>
+          <Button
+            variant="Outline"
+            leftIcon={<Trash width={20} height={20} style={{ opacity: 1 }} />}
+          >
             {COMPANY_CONTENT.BUTTON.DELETE}
-          </button>
+          </Button>
         </div>
       </div>
-      <p className="text-text-muted mb-2">{COMPANY_CONTENT.SUBTITLE}</p>
+
       <CompanyList companies={companies} />
       <div className="mt-4 flex items-center justify-center gap-2">
         <button className="text-text-muted" disabled>

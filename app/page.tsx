@@ -6,6 +6,7 @@ import {
   ContentSection,
 } from "@/components/layout";
 import { HEADER, BANNER } from "@/constants";
+import Text from "@/components/ui/Text";
 
 export default function Home() {
   return (
@@ -13,12 +14,12 @@ export default function Home() {
       <Header>
         <div className="text-lg font-semibold">{HEADER.TITLE}</div>
         <nav className="flex gap-6">
-          <button className="text-text-secondary hover:text-text-primary text-sm">
+          <Text typography="t6" bold="regular">
             {HEADER.TASK_TYPES.GENERAL}
-          </button>
-          <button className="text-text-secondary hover:text-text-primary text-sm">
+          </Text>
+          <Text typography="t6" bold="regular">
             {HEADER.TASK_TYPES.INDUSTRY}
-          </button>
+          </Text>
         </nav>
       </Header>
       <Banner subtitle={BANNER.SUBTITLE} title={BANNER.TITLE} />

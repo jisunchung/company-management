@@ -1,5 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
+import Text from "@/components/ui/Text";
 
 interface BannerProps {
   title: string;
@@ -19,11 +20,14 @@ export default function Banner({ title, subtitle, className }: BannerProps) {
       }}
     >
       <div className="relative z-10 mx-auto flex h-full items-center justify-center px-6 text-center">
-        <div>
-          {subtitle && (
-            <p className="text-text-muted mb-2 text-sm">{subtitle}</p>
-          )}
-          <h1 className="text-text-primary text-3xl font-bold">{title}</h1>
+        <div className="flex flex-col gap-2">
+          <Text typography="t5" bold="regular" className="text-text-muted">
+            {subtitle}
+          </Text>
+
+          <Text typography="t1" bold="bold" className="text-primary">
+            {title}
+          </Text>
         </div>
       </div>
     </div>
