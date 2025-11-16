@@ -12,12 +12,10 @@ import Pagination from "@/components/ui/Pagination";
 import Modal from "@/components/ui/Modal";
 import SearchableDropdown from "@/components/ui/SearchableDropdown";
 import { useCompanies } from "@/hooks/useCompanies";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createFavoriteCompany } from "@/lib/api/favoriteCompany";
+import { useCreateFavoriteCompany } from "@/hooks/useCreateFavoriteCompany";
 
 export default function CompanyListSection() {
   const { page, setPage } = usePaginationStore();
-  const queryClient = useQueryClient();
 
   const email = DEFAULT_EMAIL;
   const { data, isLoading, isError } = useFavoriteCompanies(email, page);
@@ -27,13 +25,8 @@ export default function CompanyListSection() {
   const [selectedCompany, setSelectedCompany] = useState("");
   const [memo, setMemo] = useState("");
 
-  // 관심기업 생성 mutation
-  const createMutation = useMutation({
-    mutationFn: createFavoriteCompany,
+  const { createCompany, isPending } = useCreateFavoriteCompany({
     onSuccess: () => {
-      // 성공 시 목록 다시 불러오기
-      queryClient.invalidateQueries({ queryKey: ["favoriteCompanies"] });
-      // 모달 닫기 및 폼 초기화
       setIsModalOpen(false);
       setSelectedCompany("");
       setMemo("");
@@ -62,16 +55,16 @@ export default function CompanyListSection() {
   };
 
   const handleSave = () => {
-    if (!selectedCompany) {
-      alert("기업을 선택해주세요.");
-      return;
-    }
+    const existingCompanyNames = companies.map((c) => c.name);
 
-    createMutation.mutate({
-      email,
-      company_name: selectedCompany,
-      memo: memo || null,
-    });
+    createCompany(
+      {
+        email,
+        company_name: selectedCompany,
+        memo: memo || null,
+      },
+      existingCompanyNames
+    );
   };
 
   return (
@@ -156,14 +149,8 @@ export default function CompanyListSection() {
             />
           </div>
           <div className="flex justify-end">
-            <Button
-              variant="Fill"
-              onClick={handleSave}
-              disabled={createMutation.isPending}
-            >
-              {createMutation.isPending
-                ? MODAL.ADD.CONFIRM_PENDING
-                : MODAL.ADD.CONFIRM_BUTTON}
+            <Button variant="Fill" onClick={handleSave} disabled={isPending}>
+              {isPending ? MODAL.ADD.CONFIRM_PENDING : MODAL.ADD.CONFIRM_BUTTON}
             </Button>
           </div>
         </div>

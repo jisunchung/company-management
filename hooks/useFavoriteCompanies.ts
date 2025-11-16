@@ -1,12 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   fetchFavoriteCompanies,
-  createFavoriteCompany,
   updateFavoriteCompany,
   deleteFavoriteCompany,
 } from "@/lib/api/favoriteCompany";
 import type {
-  FavoriteCompanyCreate,
   FavoriteCompanyUpdate,
   PaginatedFavoriteCompanyResponse,
 } from "@/types/favoriteCompany";
@@ -18,18 +16,6 @@ export function useFavoriteCompanies(email: string, page: number = 1) {
     queryFn: () => fetchFavoriteCompanies({ email, page }),
     enabled: !!email,
     placeholderData: (prev) => prev,
-  });
-}
-
-// 관심기업 생성
-export function useCreateFavoriteCompany() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (payload: FavoriteCompanyCreate) =>
-      createFavoriteCompany(payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["favoriteCompanies"] });
-    },
   });
 }
 
