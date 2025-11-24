@@ -1,7 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL =
-  "http://dev-assignment-env.eba-vpitzthp.ap-northeast-2.elasticbeanstalk.com";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const apiClient = axios.create({
   baseURL: API_BASE_URL,
