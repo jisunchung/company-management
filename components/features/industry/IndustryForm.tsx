@@ -2,13 +2,54 @@ import React, { useState } from "react";
 import SearchableDropdown from "@/components/ui/SearchableDropdown";
 import { useCompanies } from "@/hooks/useCompanies";
 
-export default function IndustryForm() {
+import FinstateTable, { FinstateRow } from "./FinstateTable";
+import {
+  FINSTATE_REPORT_OPTIONS,
+  FINSTATE_STATEMENT_OPTIONS,
+} from "@/constants/finstate";
+
+const IndustryForm: React.FC = () => {
   const [industryCompany, setIndustryCompany] = useState("");
   const [year, setYear] = useState("");
   const [report, setReport] = useState("");
   const [statement, setStatement] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<FinstateRow[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const { data: companiesData } = useCompanies();
   const companyOptions = companiesData?.companies ?? [];
+
+  const handleSearch = async () => {
+    setLoading(true);
+    setError(null);
+    setResult(null);
+    try {
+      const res = await fetch("/api/finstate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          company: industryCompany,
+          year,
+          report,
+          statement,
+        }),
+      });
+      const data = await res.json();
+      if (data.error) {
+        setError(data.error);
+      } else {
+        setResult(data.result as FinstateRow[]);
+      }
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setError(e.message);
+      } else {
+        setError("에러가 발생했습니다.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <form className="space-y-6">
@@ -52,11 +93,11 @@ export default function IndustryForm() {
           value={report}
           onChange={(e) => setReport(e.target.value)}
         >
-          <option value="">보고서명을 선택하세요</option>
-          <option value="1분기보고서">1분기보고서</option>
-          <option value="반기보고서">반기보고서</option>
-          <option value="3분기보고서">3분기보고서</option>
-          <option value="사업보고서">사업보고서</option>
+          {FINSTATE_REPORT_OPTIONS.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
         </select>
       </div>
       {/* 재무제표: dropdown */}
@@ -69,18 +110,23 @@ export default function IndustryForm() {
           value={statement}
           onChange={(e) => setStatement(e.target.value)}
         >
-          <option value="">재무제표 유형을 선택하세요</option>
-          <option value="재무제표">재무제표</option>
-          <option value="연결재무제표">연결재무제표</option>
+          {FINSTATE_STATEMENT_OPTIONS.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
         </select>
       </div>
       {/* 검색 버튼 (비활성화 예시) */}
-      <div className="flex justify-center">
+      <div className="flex flex-col items-center gap-4">
         <button
           type="button"
-          disabled={!(industryCompany && year && report && statement)}
+          disabled={
+            !(industryCompany && year && report && statement) || loading
+          }
+          onClick={handleSearch}
           className={`flex items-center gap-2 rounded px-6 py-2 ${
-            industryCompany && year && report && statement
+            industryCompany && year && report && statement && !loading
               ? "hover:black cursor-pointer bg-black text-white"
               : "cursor-not-allowed bg-gray-200 text-gray-400"
           }`}
@@ -96,9 +142,17 @@ export default function IndustryForm() {
             <circle cx="11" cy="11" r="8" />
             <path d="M21 21l-4.35-4.35" />
           </svg>
-          검색
+          {loading ? "검색 중..." : "검색"}
         </button>
+        {error && <div className="text-red-500">{error}</div>}
+        {result && Array.isArray(result) && (
+          <div className="w-full">
+            <FinstateTable data={result} />
+          </div>
+        )}
       </div>
     </form>
   );
-}
+};
+
+export default IndustryForm;

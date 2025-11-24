@@ -79,7 +79,8 @@ pwc-company-management-app/
 
 ### 선택과제
 
-- 선택과제는 dropdown 부분만 구현했습니다.
+- 구현완료
+- OpenDartReader오픈소스를 이용해서 구현했습니다.
 
 ---
 
