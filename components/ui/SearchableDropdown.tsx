@@ -63,11 +63,10 @@ export default function SearchableDropdown({
   return (
     <div className="flex flex-col gap-2" ref={dropdownRef}>
       <label className="text-sm font-medium text-gray-700">{label}</label>
-      <div className="relative">
+      <div className="relative w-full">
         <input
           type="text"
-          style={{ width: 600 }}
-          className="rounded border border-gray-300 px-4 py-2 pr-10 text-sm focus:border-[#FFB27F] focus:outline-none"
+          className="w-full rounded border border-gray-300 px-4 py-2 pr-10 text-sm focus:border-[#FFB27F] focus:outline-none"
           placeholder={placeholder}
           value={searchQuery}
           onChange={(e) => handleSearchChange(e.target.value)}
@@ -84,32 +83,24 @@ export default function SearchableDropdown({
             className={`transition-transform ${isOpen ? "rotate-180" : ""}`}
           />
         </button>
-      </div>
-
-      {isOpen && filteredOptions.length > 0 && (
-        <div
-          className="absolute z-10 mt-20 rounded border border-gray-300 bg-white shadow-lg"
-          style={{ width: 600 }}
-        >
-          <div className="max-h-60 overflow-y-auto p-2">
-            {filteredOptions.map((option, index) => (
-              <button
-                key={index}
-                type="button"
-                style={{
-                  width: 584,
-                  height: 40,
-                  borderRadius: 4,
-                }}
-                className="flex items-center px-3 py-4 text-left transition-colors hover:bg-[#FFB27F]"
-                onClick={() => handleSelect(option)}
-              >
-                {option}
-              </button>
-            ))}
+        {isOpen && filteredOptions.length > 0 && (
+          <div className="absolute top-full right-0 left-0 z-10 mt-1 w-full min-w-0 rounded border border-gray-300 bg-white shadow-lg">
+            <div className="max-h-60 overflow-y-auto p-2">
+              {filteredOptions.map((option, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  style={{ height: 40, borderRadius: 4 }}
+                  className="flex w-full items-center px-3 py-4 text-left transition-colors hover:bg-[#FFB27F]"
+                  onClick={() => handleSelect(option)}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
