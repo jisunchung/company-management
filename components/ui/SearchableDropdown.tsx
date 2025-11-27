@@ -29,6 +29,8 @@ export default function SearchableDropdown({
 
   // 외부 클릭 감지
   useEffect(() => {
+    if (!isOpen) return;
+
     function handleClickOutside(event: MouseEvent) {
       if (
         dropdownRef.current &&
@@ -38,8 +40,9 @@ export default function SearchableDropdown({
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
+
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [isOpen]);
 
   // 검색어로 필터링
   const filteredOptions = options.filter((option) =>
